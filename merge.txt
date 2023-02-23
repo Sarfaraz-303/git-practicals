@@ -1,1 +1,2 @@
 First line content in merge.txt
+Adding 2nd line in merge_branch.
