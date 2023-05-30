@@ -1,34 +1,24 @@
 version: 0.2
 
-# Set an environment variable that can be used below in the build phases.
-env:
-  variables:
-    TEST_VAR: "t2.micro"
 phases:
   install:
-    commands:
-      - echo Entered the install phase
-      - apt-get update -y
-    finally:
-      - echo This always runs even if the update or install command fails
+    runtime-versions:
+      java: corretto11
   pre_build:
     commands:
-      - echo Entered the pre_build phase...
-    finally:
-      - echo This always runs even if the login command fails
+      - echo Nothing to do in the pre_build phase...
+      - echo Okay to do in the pre_build phase...
   build:
     commands:
-      - ls -altr
       - printenv
-      - echo $TEST_VAR
-      - echo $AWS_REGION
-      - echo $CODEBUILD_BUILD_NUMBER
-      - echo Entered the build phase...
       - echo Build started on `date`
-      - aws s3 ls
-    finally:
-      - echo This always runs even if the install command fails
+      # - mvn install
+      - mvn package -Dwar.finalName=${CODEBUILD_BUILD_NUMBER}
   post_build:
     commands:
-      - echo Entered the post_build phase...
       - echo Build completed on `date`
+artifacts:
+  files:
+    - target/*
+    - appspec.yml
+    - scripts/*
